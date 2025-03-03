@@ -259,8 +259,24 @@ with st.spinner(text="Fetching batch of inference data"):
 
 with st.spinner(text="Fetching predictions"):
     predictions = fetch_next_hour_predictions()
+    predictions = predictions.merge(taxi_zones, on="pickup_location_id", how="left")
     st.sidebar.write("Model was loaded from the registry")
     progress_bar.progress(3 / N_STEPS)
+    
+
+st.write("Preview of taxi_zones DataFrame:", taxi_zones.head())
+
+# Create a dropdown to filter predictions by location name
+location_options = ["All"] + sorted(predictions["zone_name"].dropna().unique().tolist())
+selected_location = st.sidebar.selectbox("Select Pickup Location", location_options)
+
+# Filter predictions based on selected location name
+if selected_location != "All":
+    predictions = predictions[predictions["zone_name"] == selected_location]
+
+# Update the map title based on selection
+st.subheader(f"Taxi Ride Predictions Map - {selected_location if selected_location != 'All' else 'All Locations'}")
+
 
 shapefile_path = DATA_DIR / "taxi_zones" / "taxi_zones.shp"
 
