@@ -20,6 +20,10 @@ from src.config import DATA_DIR
 from src.inference import fetch_next_hour_predictions, load_batch_of_features_from_store
 from src.plot_utils import plot_prediction
 
+import pytz
+
+
+
 # Add parent directory to Python path
 
 
@@ -215,9 +219,17 @@ def load_shape_data_file(
 
 # st.set_page_config(layout="wide")
 
-current_date = pd.Timestamp.now(tz="Etc/UTC")
+#current_date = pd.Timestamp.now(tz="Etc/UTC")
+#st.title(f"New York Yellow Taxi Cab Demand Next Hour")
+#st.header(f'{current_date.strftime("%Y-%m-%d %H:%M:%S")}')
+
+# Convert UTC to New York Time (EST/EDT)
+nyc_tz = pytz.timezone("America/New_York")
+current_date = pd.Timestamp.now(tz="UTC").tz_convert(nyc_tz)
+
 st.title(f"New York Yellow Taxi Cab Demand Next Hour")
-st.header(f'{current_date.strftime("%Y-%m-%d %H:%M:%S")}')
+st.header(f'{current_date.strftime("%Y-%m-%d %H:%M:%S %Z")}')  # Added timezone
+
 
 progress_bar = st.sidebar.header("Working Progress")
 progress_bar = st.sidebar.progress(0)
