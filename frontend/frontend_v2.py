@@ -262,9 +262,11 @@ with st.spinner(text="Fetching predictions"):
     predictions = predictions.merge(taxi_zones, on="pickup_location_id", how="left")
     st.sidebar.write("Model was loaded from the registry")
     progress_bar.progress(3 / N_STEPS)
-    
+
 
 st.write("Preview of taxi_zones DataFrame:", taxi_zones.head())
+st.write("Predictions after merging with taxi zones:", predictions.head())
+
 
 # Create a dropdown to filter predictions by location name
 location_options = ["All"] + sorted(predictions["zone_name"].dropna().unique().tolist())
