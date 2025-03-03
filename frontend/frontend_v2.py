@@ -22,6 +22,15 @@ from src.plot_utils import plot_prediction
 
 import pytz
 
+# Load Taxi Zone Lookup CSV (Ensure this file is inside 'data/' folder)
+csv_path = Path(__file__).parent / "data" / "taxi_zone_lookup.csv"
+
+# Load the file and rename columns
+if csv_path.exists():
+    taxi_zones = pd.read_csv(csv_path)[["LocationID", "Zone"]]
+    taxi_zones.rename(columns={"LocationID": "pickup_location_id", "Zone": "zone_name"}, inplace=True)
+else:
+    raise FileNotFoundError(f"Error: {csv_path} not found! Make sure it's inside the 'data/' folder.")
 
 
 # Add parent directory to Python path
